@@ -1,22 +1,19 @@
 
-for(var i =0;i<7;i++)
-{
-document.querySelectorAll(".drum")[i].addEventListener("click",clicked);
-}
+function removeTransition(e) {
+    if (e.propertyName !== 'transform') return;
+    e.target.classList.remove('playing');
+  }
 
-function clicked()
-{
-  var audio = new Audio(this.innerHTML + ".mp3");
-  audio.play();
-}
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
+    if (!audio) return;
 
+    key.classList.add('playing');
+    audio.currentTime = 0;
+    audio.play();
+  }
 
-document.addEventListener("keypress",function(event){keypress(event.key)});
-
-
-function keypress(key)
-{
-  var audio = new Audio(key + ".mp3");
-  audio.play();
-
-}
+  const keys = Array.from(document.querySelectorAll('.key'));
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+  window.addEventListener('keydown', playSound);
